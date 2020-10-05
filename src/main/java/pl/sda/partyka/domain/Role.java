@@ -15,8 +15,8 @@ import java.util.List;
 @ToString
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue()
+    private long roleId;
 
     private String name;
 

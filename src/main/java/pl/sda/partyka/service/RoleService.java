@@ -9,9 +9,13 @@ import pl.sda.partyka.repository.RoleRepository;
 @RequiredArgsConstructor
 public class RoleService {
 
-    private final RoleRepository RoleRepo;
+    private final RoleRepository roleRepo;
 
     public void addRole(Role role){
-        RoleRepo.save(role);
+        roleRepo.save(role);
+    }
+
+    public Role getRoleByName(String name){
+        return roleRepo.getByName(name);
     }
 }

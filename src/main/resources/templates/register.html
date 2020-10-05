@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Manager App</title>
+</head>
+<body>
+    <p>There will be form for registering users</p>
+    <form th:action="@{/register}" th:object="${userCreateRequest}" method="POST">
+        <div>
+            <input type="text" th:field="*{login}" placeholder="Login (email)">
+        </div>
+        <div>
+            <input type="password" th:field="*{password}" placeholder="Password">
+        </div>
+        <div>
+            <input type="text" th:field="*{displauName}" placeholder="Display Name">
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</body>
+</html>

@@ -9,8 +9,8 @@ import java.util.List;
 @Entity
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue()
+    private long eventId;
 
     private String title;
     @CreationTimestamp

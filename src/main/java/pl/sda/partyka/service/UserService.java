@@ -19,7 +19,7 @@ public class UserService {
     private final RoleService roleService;
 
     public void addUser(UserCreateRequest userToAdd){
-        List<Role> roles = new ArrayList<>();
+        List<Role> roles = userToAdd.getRoles();
         roles.add(roleService.getRoleByName(Utils.DEFAULT_ROLE));
         User user = User.builder()
                 .login(userToAdd.getLogin())

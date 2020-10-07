@@ -17,11 +17,12 @@ public class User {
     @GeneratedValue()
     private long userId;
 
+    @Column(unique = true)
     private String login;
     private String password;
     private String displayName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "userId")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "roleId")})

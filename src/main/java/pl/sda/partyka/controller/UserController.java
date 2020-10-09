@@ -11,6 +11,7 @@ import pl.sda.partyka.dto.UserCreateRequest;
 import pl.sda.partyka.service.RoleService;
 import pl.sda.partyka.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -31,7 +32,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerNewUser(
-            @ModelAttribute(value = "userCreateRequest") UserCreateRequest userToCreate){
+            @ModelAttribute(value = "userCreateRequest") @Valid UserCreateRequest userToCreate){
         userService.addUser(userToCreate);
         return "main";
     }

@@ -1,10 +1,8 @@
 package pl.sda.partyka.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pl.sda.partyka.domain.Role;
 import pl.sda.partyka.domain.User;
@@ -24,7 +22,7 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public void addUser(UserCreateRequest userToAdd){
+    public void addUser(UserCreateRequest userToAdd) {
         List<Role> roles = userToAdd.getRoles();
         roles.add(roleService.getRoleByName(Utils.DEFAULT_ROLE));
         User user = User.builder()

@@ -10,4 +10,9 @@ public class MainContoller {
     public String showMainSite(){
         return "main";
     }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
 }

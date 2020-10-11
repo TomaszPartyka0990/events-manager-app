@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.sda.partyka.domain.Role;
 import pl.sda.partyka.domain.User;
 import pl.sda.partyka.dto.UserCreateRequest;
+import pl.sda.partyka.error.PasswordsMissmatchException;
 import pl.sda.partyka.repository.UserRepository;
 import pl.sda.partyka.utils.Utils;
 
@@ -22,7 +23,10 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public void addUser(UserCreateRequest userToAdd) {
+    public void addUser(UserCreateRequest userToAdd) throws PasswordsMissmatchException {
+        if (!userToAdd.getPassword().equals(userToAdd.getRepeatedPassword())){
+            throw new PasswordsMissmatchException("Provided Passwords are not equal");
+        }
         List<Role> roles = userToAdd.getRoles();
         roles.add(roleService.getRoleByName(Utils.DEFAULT_ROLE));
         User user = User.builder()

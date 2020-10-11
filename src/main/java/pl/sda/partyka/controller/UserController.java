@@ -3,15 +3,20 @@ package pl.sda.partyka.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.sda.partyka.domain.Role;
 import pl.sda.partyka.dto.UserCreateRequest;
+import pl.sda.partyka.error.ErrorInfo;
 import pl.sda.partyka.service.RoleService;
 import pl.sda.partyka.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,7 +27,9 @@ public class UserController {
     private final RoleService roleService;
 
     @GetMapping("/register")
-    public String showRegisterForm(Model model){
+    public String showRegisterForm(Model model, @ModelAttribute(value = "errors") ArrayList<ErrorInfo> errorsCaught){
+        ArrayList<ErrorInfo> errors = new ArrayList<>(errorsCaught);
+        model.addAttribute("errors", errors);
         UserCreateRequest userCreateRequest = new UserCreateRequest();
         model.addAttribute("userCreateRequest", userCreateRequest);
         List<Role> allRoles = roleService.getAllWithoutDefault();
@@ -32,7 +39,14 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerNewUser(
-            @ModelAttribute(value = "userCreateRequest") @Valid UserCreateRequest userToCreate){
+            @ModelAttribute(value = "userCreateRequest") @Valid UserCreateRequest userToCreate, Errors validationErrors, RedirectAttributes redirectAttributes){
+        if (validationErrors.hasErrors()){
+            List<FieldError> fieldErrors = validationErrors.getFieldErrors();
+            ArrayList<ErrorInfo> errors = new ArrayList<>();
+            fieldErrors.forEach(e -> errors.add(new ErrorInfo("Value " + e.getRejectedValue() + " provided in " + e.getField() + " does not meet the field requirements")));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:/register";
+        }
         userService.addUser(userToCreate);
         return "main";
     }

@@ -20,6 +20,9 @@ public class UserCreateRequest {
     @Length(min = 8, max = 30)
     private String password;
     @NotNull
+    @Length(min = 8, max = 30)
+    private String repeatedPassword;
+    @NotNull
     @NotBlank
     @Length(max = 50)
     private String displauName;

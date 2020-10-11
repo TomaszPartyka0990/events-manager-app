@@ -1,5 +1,6 @@
 package pl.sda.partyka.error;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -13,6 +14,11 @@ public class ErrorHandler {
     @ExceptionHandler({PasswordsMissmatchException.class, UserAlreadyExistsInDbException.class})
     public String PasswordsMissmatchError(Exception e, RedirectAttributes redirectAttributes){
         return addErrorToRedirectAttributesAndRedirectToRegisterContoller(redirectAttributes, e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public String AccessDenied(AccessDeniedException e){
+        return "access_denied";
     }
 
     private String addErrorToRedirectAttributesAndRedirectToRegisterContoller(RedirectAttributes redirectAttributes, String message) {

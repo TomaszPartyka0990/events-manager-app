@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Manager App</title>
+</head>
+<body>
+<main>
+    <div style="color: red" th:each="error : ${errors}" th:text="${error.getMsg()}">Error Msg</div>
+    <div sec:authorize="isAuthenticated()" style="display: inline-block;">
+        Logged as: <p sec:authentication="name" style="display: inline"></p>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <p>Add new event</p>
+    <form th:id="registrationForm" th:action="@{/addEvent}" th:object="${eventCreateRequest}" method="POST">
+        <div>
+            <label>Title</label>
+        </div>
+        <div>
+            <input type="text" name="title" th:field="*{title}" placeholder="Title" required>
+        </div>
+        <div>
+            <label>Starting Date</label>
+        </div>
+        <div>
+            <input type="date" th:type="date" name="startingDate" id="startingDate" th:field="*{startingDate}" placeholder="Starting Date" required>
+        </div>
+        <div>
+            <label>Ending Date</label>
+        </div>
+        <div>
+            <input type="date" name="endingDate" id="endingDate" th:field="*{endingDate}" placeholder="Ending Date" required>
+        </div>
+        <div>
+            <label>Description (min 20 chars)</label>
+        </div>
+        <div>
+            <input type="text" name="description" th:field="*{description}" placeholder="Description" required>
+        </div>
+        <div>
+            <input type="submit" value="Add Event">
+        </div>
+    </form>
+</main>
+</body>
+</html>

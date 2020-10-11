@@ -16,6 +16,9 @@
         <p style="display: inline;"> / </p>
         <a th:href="@{/register}">Register</a>
     </div>
+    <div sec:authorize="hasRole('ORGANIZER')">
+        <a th:href="@{/addEvent}">Add new event</a>
+    </div>
     <h2>Main Site</h2>
 </body>
 </html>

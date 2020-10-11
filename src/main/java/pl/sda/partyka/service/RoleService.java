@@ -15,8 +15,8 @@ public class RoleService {
 
     private final RoleRepository roleRepo;
 
-    public void addRole(Role role){
-        roleRepo.save(role);
+    public Role addRole(Role role){
+        return roleRepo.save(role);
     }
 
     public Role getRoleByName(String name){

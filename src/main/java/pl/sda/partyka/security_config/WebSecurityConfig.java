@@ -1,6 +1,7 @@
 package pl.sda.partyka.security_config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.sda.partyka.service.UserService;
 
+import static pl.sda.partyka.utils.Utils.DEVELOP_PROFILE;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -21,6 +24,10 @@ import pl.sda.partyka.service.UserService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
+
+    @Value("${running.profile}")
+    private String runningProfile;
+
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -47,21 +54,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/main").permitAll()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/base/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage("/login").permitAll()
-                .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .invalidateHttpSession(true).clearAuthentication(true)
-                .logoutSuccessUrl("/").permitAll()
-                .and()
-                .csrf().ignoringAntMatchers("/base/**")
-                .and()
-                .headers().frameOptions().sameOrigin();
+        if (runningProfile.equals(DEVELOP_PROFILE)) {
+            http.authorizeRequests()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/main").permitAll()
+                    .antMatchers("/register").permitAll()
+                    .antMatchers("/base/**").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin().loginPage("/login").permitAll()
+                    .and()
+                    .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .invalidateHttpSession(true).clearAuthentication(true)
+                    .logoutSuccessUrl("/").permitAll()
+                    .and()
+                    .csrf().ignoringAntMatchers("/base/**")
+                    .and()
+                    .headers().frameOptions().sameOrigin();
+        } else {
+            http.authorizeRequests()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/main").permitAll()
+                    .antMatchers("/register").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin().loginPage("/login").permitAll()
+                    .and()
+                    .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .invalidateHttpSession(true).clearAuthentication(true)
+                    .logoutSuccessUrl("/").permitAll();
+        }
     }
 }

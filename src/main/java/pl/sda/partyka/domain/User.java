@@ -17,7 +17,6 @@ public class User {
     @GeneratedValue()
     private long userId;
 
-    @Column(unique = true)
     private String login;
     private String password;
     private String displayName;

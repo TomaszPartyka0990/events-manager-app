@@ -8,6 +8,7 @@ import pl.sda.partyka.domain.Role;
 import pl.sda.partyka.domain.User;
 import pl.sda.partyka.dto.UserCreateRequest;
 import pl.sda.partyka.error.PasswordsMissmatchException;
+import pl.sda.partyka.error.UserAlreadyExistsInDbException;
 import pl.sda.partyka.repository.UserRepository;
 import pl.sda.partyka.utils.Utils;
 
@@ -23,9 +24,13 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public void addUser(UserCreateRequest userToAdd) throws PasswordsMissmatchException {
+    public void addUser(UserCreateRequest userToAdd) throws PasswordsMissmatchException, UserAlreadyExistsInDbException {
         if (!userToAdd.getPassword().equals(userToAdd.getRepeatedPassword())){
             throw new PasswordsMissmatchException("Provided Passwords are not equal");
+        }
+        User userByLogin = getUserByLogin(userToAdd.getLogin());
+        if (userByLogin != null){
+            throw new UserAlreadyExistsInDbException("Provided login already exists");
         }
         List<Role> roles = userToAdd.getRoles();
         roles.add(roleService.getRoleByName(Utils.DEFAULT_ROLE));

@@ -5,6 +5,11 @@
     <title>Events Manager App</title>
 </head>
 <body>
+    <div style="color: red" th:if="${param.error}">Invalid login and/or password</div>
+    <div style="display: inline-block;">
+        <p style="display: inline;">Doesn't have account ? </p>
+        <a th:href="@{/register}">Register now</a>
+    </div>
     <form th:action="@{/login}" method="post">
         <div>
             <input type="text" name="username" id="username" autofocus="autofocus" placeholder="Login (email)">

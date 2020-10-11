@@ -12,7 +12,5 @@ public class MainContoller {
     }
 
     @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
+    public String login(){ return "login"; }
 }

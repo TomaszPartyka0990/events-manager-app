@@ -24,7 +24,7 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public void addUser(UserCreateRequest userToAdd) throws PasswordsMissmatchException, UserAlreadyExistsInDbException {
+    public User addUser(UserCreateRequest userToAdd) throws PasswordsMissmatchException, UserAlreadyExistsInDbException {
         if (!userToAdd.getPassword().equals(userToAdd.getRepeatedPassword())){
             throw new PasswordsMissmatchException("Provided Passwords are not equal");
         }
@@ -43,7 +43,7 @@ public class UserService {
                 .eventsSignedTo(new ArrayList<>())
                 .createdComments(new ArrayList<>())
                 .build();
-        userRepo.save(user);
+        return userRepo.save(user);
     }
     
     public User getUserByLogin(String login){

@@ -20,5 +20,27 @@
         <a th:href="@{/addEvent}">Add new event</a>
     </div>
     <h2>Main Site</h2>
+    <table border="1">
+        <thead>
+            <tr style="text-align: center; vertical-align: middle; font-weight: bold">
+                <td>Title</td>
+                <td>Starting Date</td>
+                <td>Ending Date</td>
+                <td>Description</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align: center; vertical-align: middle" th:each="event: ${events}">
+                <td th:text="${event.getTitle()}"></td>
+                <td th:text="${event.getStartingDate()}"></td>
+                <td th:text="${event.getEndingDate()}"></td>
+                <td th:text="${event.getDescription()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:if="${events.totalPages > 0}"
+    th:each="pageNumber : ${pageNumbers}" style="display: inline-block;">
+    <a th:href="@{/main(page=${pageNumber}-1)}" th:text="${pageNumber}"></a>
+    </div>
 </body>
 </html>

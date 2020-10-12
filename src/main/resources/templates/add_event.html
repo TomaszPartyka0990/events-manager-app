@@ -37,7 +37,7 @@
             <label>Description (min 20 chars)</label>
         </div>
         <div>
-            <input type="text" name="description" th:field="*{description}" placeholder="Description" required>
+            <textarea th:form="registrationForm" name="description" rows="10" cols="30" th:field="*{description}" placeholder="Type your event description here" required></textarea>
         </div>
         <div>
             <input type="submit" value="Add Event">

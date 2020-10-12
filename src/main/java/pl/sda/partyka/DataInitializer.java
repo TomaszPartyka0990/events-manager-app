@@ -6,12 +6,17 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import pl.sda.partyka.domain.Role;
+import pl.sda.partyka.domain.User;
+import pl.sda.partyka.dto.EventCreateRequest;
 import pl.sda.partyka.dto.UserCreateRequest;
+import pl.sda.partyka.service.EventService;
 import pl.sda.partyka.service.RoleService;
 import pl.sda.partyka.service.UserService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static pl.sda.partyka.utils.Utils.DEVELOP_PROFILE;
 
@@ -21,6 +26,7 @@ public class DataInitializer implements ApplicationRunner {
 
     private final RoleService roleService;
     private final UserService userService;
+    private final EventService eventService;
 
     @Value("${running.profile}")
     private String runningProfile;
@@ -38,7 +44,16 @@ public class DataInitializer implements ApplicationRunner {
             List<Role> roles = new ArrayList<>();
             roles.add(organizer);
             userCreateRequest.setRoles(roles);
-            userService.addUser(userCreateRequest);
+            User user = userService.addUser(userCreateRequest);
+            LocalDate now = LocalDate.now();
+            for (int i=0; i<50;i++) {
+                EventCreateRequest eventCreateRequest = new EventCreateRequest();
+                eventCreateRequest.setTitle("Event" + i);
+                eventCreateRequest.setStartingDate(now.toString());
+                eventCreateRequest.setEndingDate(now.plusDays(1).toString());
+                eventCreateRequest.setDescription("This event was added for test purposes only !!");
+                eventService.addEvent(eventCreateRequest, user);
+            }
         }
     }
 }

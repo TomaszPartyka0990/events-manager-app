@@ -46,6 +46,6 @@ public class EventContoller {
         }
         User author = userService.getUserByLogin(principal.getName());
         eventService.addEvent(eventToCreate, author);
-        return "main";
+        return "redirect:/main";
     }
 }

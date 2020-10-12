@@ -13,7 +13,14 @@ public class ErrorHandler {
 
     @ExceptionHandler({PasswordsMissmatchException.class, UserAlreadyExistsInDbException.class})
     public String PasswordsMissmatchError(Exception e, RedirectAttributes redirectAttributes){
-        return addErrorToRedirectAttributesAndRedirectToRegisterContoller(redirectAttributes, e.getMessage());
+        addErrorToRedirectAttributes(redirectAttributes, e.getMessage());
+        return "redirect:/register";
+    }
+
+    @ExceptionHandler(EventCreationDateException.class)
+    public String EventCreationDateError(EventCreationDateException e, RedirectAttributes redirectAttributes){
+        addErrorToRedirectAttributes(redirectAttributes, e.getMessage());
+        return "redirect:/addEvent";
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -21,10 +28,9 @@ public class ErrorHandler {
         return "access_denied";
     }
 
-    private String addErrorToRedirectAttributesAndRedirectToRegisterContoller(RedirectAttributes redirectAttributes, String message) {
+    private void addErrorToRedirectAttributes(RedirectAttributes redirectAttributes, String message) {
         List<ErrorInfo> errors = new ArrayList<>();
         errors.add(new ErrorInfo(message));
         redirectAttributes.addFlashAttribute("errors", errors);
-        return "redirect:/register";
     }
 }

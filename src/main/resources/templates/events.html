@@ -19,12 +19,13 @@
     <div sec:authorize="hasRole('ORGANIZER')">
         <a th:href="@{/addEvent}">Add new event</a>
     </div>
-    <h2>Main Site</h2>
+    <h2>Events Site</h2>
     <form th:action="@{/events}">
-        <input type="text" th:name="title" th:id="title" placeholder="Type title to search...">
+        <input type="text" th:name="title" th:id="title" th:value="${title}" placeholder="Type title to search...">
         <select th:name="range" th:id="range">
             <option th:each="option : ${eventSearchOptions}"
                     th:value="${option.getValue()}"
+                    th:selected="${option.getValue() == range ? true : false}"
                     th:text="${option.getDisplayText()}">Options</option>
         </select>
         <input type="submit" value="Search">
@@ -50,7 +51,7 @@
     </table>
     <div th:if="${events.totalPages > 0}"
     th:each="pageNumber : ${pageNumbers}" style="display: inline-block;">
-    <a th:href="@{/main(page=${pageNumber}-1)}" th:text="${pageNumber}"></a>
+    <a th:href="@{/events(title=${title}, range=${range}, page=${pageNumber}-1)}" th:text="${pageNumber}"></a>
     </div>
 </body>
 </html>

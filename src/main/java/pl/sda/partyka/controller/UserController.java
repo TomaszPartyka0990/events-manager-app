@@ -40,7 +40,7 @@ public class UserController {
     public String registerNewUser(
             @ModelAttribute(value = "userCreateRequest") @Valid UserCreateRequest userToCreate, Errors validationErrors, RedirectAttributes redirectAttributes){
         if (validationErrors.hasErrors()){
-            ControllersMethods.getErrorsAddThemToAttributesAndSendRedirect(validationErrors, redirectAttributes);
+            ControllersMethods.getErrorsAddThemToAttributes(validationErrors, redirectAttributes);
             return "redirect:/register";
         }
         userService.addUser(userToCreate);

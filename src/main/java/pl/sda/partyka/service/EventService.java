@@ -50,6 +50,21 @@ public class EventService {
         return eventRepo.findAllByStartingDateIsAfter(LocalDate.now().minusDays(1), pageRequest).map(this::mapEventToEventTableView);
     }
 
+    public Page<EventTableView> searchForEventsByTitleSortedAscendingByStartingDate(String title, Integer range, Integer page){
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.Direction.ASC, EVENT_START_DATE_FIELD_NAME);
+        if (range != 0 && range != 1){
+            return eventRepo.findAllByTitleContainsIgnoreCase(title, pageRequest).map(this::mapEventToEventTableView);
+        } else {
+            LocalDate date;
+            if (range == 1) {
+                date = LocalDate.now().minusDays(1);
+            } else {
+                date = LocalDate.now();
+            }
+            return eventRepo.findAllByTitleContainsIgnoreCaseAndStartingDateIsAfter(title, date, pageRequest).map(this::mapEventToEventTableView);
+        }
+    }
+
     private EventTableView mapEventToEventTableView(Event event){
         String eventTableViewDescription;
         String description = event.getDescription();

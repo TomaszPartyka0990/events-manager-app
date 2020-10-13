@@ -11,4 +11,6 @@ import java.time.LocalDate;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findAllByStartingDateIsAfter(LocalDate date, Pageable pageable);
+    Page<Event> findAllByTitleContainsIgnoreCase(String titleFragment, Pageable pageable);
+    Page<Event> findAllByTitleContainsIgnoreCaseAndStartingDateIsAfter(String titleFragment, LocalDate date, Pageable pageable);
 }

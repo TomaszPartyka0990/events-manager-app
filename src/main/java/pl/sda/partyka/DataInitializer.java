@@ -16,7 +16,6 @@ import pl.sda.partyka.service.UserService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static pl.sda.partyka.utils.Utils.DEVELOP_PROFILE;
 
@@ -46,11 +45,16 @@ public class DataInitializer implements ApplicationRunner {
             userCreateRequest.setRoles(roles);
             User user = userService.addUser(userCreateRequest);
             LocalDate now = LocalDate.now();
-            for (int i=0; i<50;i++) {
+            for (int i=0; i<60;i++) {
                 EventCreateRequest eventCreateRequest = new EventCreateRequest();
                 eventCreateRequest.setTitle("Event" + i);
-                eventCreateRequest.setStartingDate(now.toString());
-                eventCreateRequest.setEndingDate(now.plusDays(1).toString());
+                if (i<41) {
+                    eventCreateRequest.setStartingDate(now.toString());
+                    eventCreateRequest.setEndingDate(now.plusDays(1).toString());
+                } else {
+                    eventCreateRequest.setStartingDate(now.plusDays(1).toString());
+                    eventCreateRequest.setEndingDate(now.plusDays(1).toString());
+                }
                 eventCreateRequest.setDescription("This event was added for test purposes only !!");
                 eventService.addEvent(eventCreateRequest, user);
             }

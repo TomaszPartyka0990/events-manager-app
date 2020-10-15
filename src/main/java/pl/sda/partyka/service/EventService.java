@@ -10,9 +10,11 @@ import pl.sda.partyka.domain.User;
 import pl.sda.partyka.dto.EventCreateRequest;
 import pl.sda.partyka.dto.EventTableView;
 import pl.sda.partyka.error.EventCreationDateException;
+import pl.sda.partyka.error.EventNotFoundException;
 import pl.sda.partyka.repository.EventRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static pl.sda.partyka.utils.Utils.EVENT_START_DATE_FIELD_NAME;
 
@@ -62,6 +64,15 @@ public class EventService {
                 date = LocalDate.now();
             }
             return eventRepo.findAllByTitleContainsIgnoreCaseAndStartingDateIsAfter(title, date, pageRequest).map(this::mapEventToEventTableView);
+        }
+    }
+
+    public EventTableView getEventById(Long eventId) throws EventNotFoundException{
+        Optional<Event> eventById = eventRepo.findById(eventId);
+        if (eventById.isPresent()){
+            return mapEventToEventTableView(eventById.get());
+        } else {
+            throw new EventNotFoundException("Event not found");
         }
     }
 

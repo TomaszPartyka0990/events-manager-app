@@ -41,7 +41,7 @@
         </thead>
         <tbody>
             <tr style="text-align: center; vertical-align: middle" th:each="event: ${events}">
-                <td th:text="${event.getTitle()}"></td>
+                <td><a th:href="@{/events/{eventId}(eventId = ${event.getId()})}" th:text="${event.getTitle()}"></a></td>
                 <td th:text="${event.getStartingDate()}"></td>
                 <td th:text="${event.getEndingDate()}"></td>
                 <td th:text="${event.getDescription()}"></td>

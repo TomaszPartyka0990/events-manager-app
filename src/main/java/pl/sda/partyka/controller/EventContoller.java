@@ -6,10 +6,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.sda.partyka.domain.User;
 import pl.sda.partyka.dto.EventCreateRequest;
@@ -62,5 +59,12 @@ public class EventContoller {
         model.addAttribute("range", range);
         ControllersMethods.addEventsAndSearchOptionsAndPageNumbersToModelAttributes(model, events);
         return "events";
+    }
+
+    @GetMapping("/events/{eventId}")
+    public String showEventById(Model model, @PathVariable(name = "eventId") Long eventId){
+        EventTableView event = eventService.getEventById(eventId);
+        model.addAttribute("eventDetails", event);
+        return "single_event";
     }
 }

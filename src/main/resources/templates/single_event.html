@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Manager App</title>
+</head>
+<body>
+    <div sec:authorize="isAuthenticated()" style="display: inline-block;">
+        Logged as: <p sec:authentication="name" style="display: inline"></p>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <div sec:authorize="!isAuthenticated()" style="display: inline-block;">
+        <a th:href="@{/login}">Login</a>
+        <p style="display: inline;"> / </p>
+        <a th:href="@{/register}">Register</a>
+    </div>
+    <div sec:authorize="hasRole('ORGANIZER')">
+        <a th:href="@{/addEvent}">Add new event</a>
+    </div>
+    <h2>Single Event Site</h2>
+    <label>Title</label>
+    <div th:text="${eventDetails.getTitle()}"></div>
+    <label>Starting Date:</label>
+    <div th:text="${eventDetails.getStartingDate()}"></div>
+    <label>Ending Date:</label>
+    <div th:text="${eventDetails.getEndingDate()}"></div>
+    <label>Full Description</label>
+    <div>
+        <textarea th:text="${eventDetails.getDescription()}" rows="10" cols="30" disabled></textarea>
+    </div>
+</body>
+</html>

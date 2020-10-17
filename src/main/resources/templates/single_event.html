@@ -20,6 +20,10 @@
         <a th:href="@{/addEvent}">Add new event</a>
     </div>
     <h2>Single Event Site</h2>
+    <div>
+        <a th:href="@{/events}">Back to events list</a>
+    </div>
+    <br>
     <label>Title</label>
     <div th:text="${eventDetails.getTitle()}"></div>
     <label>Starting Date:</label>
@@ -30,5 +34,32 @@
     <div>
         <textarea th:text="${eventDetails.getDescription()}" rows="10" cols="30" disabled></textarea>
     </div>
+    <br><br>
+    <div style="color: red" th:each="error : ${errors}" th:text="${error.getMsg()}">Error Msg</div>
+    <div sec:authorize="isAuthenticated()">
+        <form th:id="commentCreateForm" th:action="@{/addComment}" th:object="${commentCreateRequest}" method="POST">
+            <div>
+                <input type="number" th:field="*{eventId}" th:value="*{getEventId()}" hidden>
+            </div>
+            <label>Leave a comment (max 500 chars)</label>
+            <div>
+                <textarea th:form="commentCreateForm" th:field="*{content}" placeholder="enter your comment here" rows="10" cols="30"></textarea>
+            </div>
+            <div>
+                <input type="submit" value="Comment">
+            </div>
+        </form>
+        <br>
+        <div th:if="${comments.getTotalElements()>0}">Comments:</div>
+        <div th:each="comment : ${comments}">
+            <label th:text="${comment.getCommentAuthor().getDisplayName()}">Author</label>
+            <div th:text="${comment.getContent()}">Comment content</div>
+        </div>
+        <div th:if="${comments.totalPages > 1}"
+             th:each="pageNumber : ${pageNumbers}" style="display: inline-block;">
+            <a th:href="@{/events/{eventId}(eventId = ${commentCreateRequest.getEventId()}, page = ${pageNumber}-1)}" th:text="${pageNumber}"></a>
+        </div>
+    </div>
+    <div sec:authorize="!isAuthenticated()">Comments section is available only for logged users</div>
 </body>
 </html>

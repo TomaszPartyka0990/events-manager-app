@@ -67,10 +67,19 @@ public class EventService {
         }
     }
 
-    public EventTableView getEventById(Long eventId) throws EventNotFoundException{
+    public EventTableView getEventViewById(Long eventId) throws EventNotFoundException{
         Optional<Event> eventById = eventRepo.findById(eventId);
         if (eventById.isPresent()){
             return mapEventToEventTableView(eventById.get());
+        } else {
+            throw new EventNotFoundException("Event not found");
+        }
+    }
+
+    public Event getEventById(Long eventId) throws EventNotFoundException{
+        Optional<Event> eventById = eventRepo.findById(eventId);
+        if (eventById.isPresent()){
+            return eventById.get();
         } else {
             throw new EventNotFoundException("Event not found");
         }

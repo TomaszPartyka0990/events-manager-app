@@ -49,7 +49,7 @@
             </tr>
         </tbody>
     </table>
-    <div th:if="${events.totalPages > 0}"
+    <div th:if="${events.totalPages > 1}"
     th:each="pageNumber : ${pageNumbers}" style="display: inline-block;">
     <a th:href="@{/events(title=${title}, range=${range}, page=${pageNumber}-1)}" th:text="${pageNumber}"></a>
     </div>

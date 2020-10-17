@@ -32,4 +32,7 @@ public class Event {
 
     @ManyToMany(mappedBy = "eventsSignedTo")
     private List<User> signedUsers;
+
+    @OneToMany(mappedBy = "connectedEvent")
+    private List<Comment> comments;
 }

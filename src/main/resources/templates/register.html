@@ -8,6 +8,15 @@
 </head>
 <body>
 <main>
+    <div sec:authorize="isAuthenticated()" style="display: inline-block;">
+        Logged as: <p sec:authentication="name" style="display: inline"></p>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <div sec:authorize="!isAuthenticated()" style="display: inline-block;">
+        <a th:href="@{/login}">Login</a>
+        <p style="display: inline;"> / </p>
+        <a th:href="@{/register}">Register</a>
+    </div>
     <div style="color: red" th:each="error : ${errors}" th:text="${error.getMsg()}">Error Msg</div>
     <p>Add new user</p>
     <form th:id="registrationForm" th:action="@{/register}" th:object="${userCreateRequest}" method="POST">

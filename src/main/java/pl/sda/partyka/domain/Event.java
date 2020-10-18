@@ -1,5 +1,6 @@
 package pl.sda.partyka.domain;
 
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -7,10 +8,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+@Builder
+@AllArgsConstructor
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue()
+    private long eventId;
 
     private String title;
     @CreationTimestamp
@@ -25,4 +32,7 @@ public class Event {
 
     @ManyToMany(mappedBy = "eventsSignedTo")
     private List<User> signedUsers;
+
+    @OneToMany(mappedBy = "connectedEvent")
+    private List<Comment> comments;
 }

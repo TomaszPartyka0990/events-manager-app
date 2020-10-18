@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Manager App</title>
+</head>
+<body>
+    <div sec:authorize="isAuthenticated()" style="display: inline-block;">
+        Logged as: <p sec:authentication="name" style="display: inline"></p>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <div sec:authorize="!isAuthenticated()" style="display: inline-block;">
+        <a th:href="@{/login}">Login</a>
+        <p style="display: inline;"> / </p>
+        <a th:href="@{/register}">Register</a>
+    </div>
+    <div sec:authorize="hasRole('ORGANIZER')">
+        <a th:href="@{/addEvent}">Add new event</a>
+    </div>
+    <h2>Events Site</h2>
+    <form th:action="@{/events}">
+        <input type="text" th:name="title" th:id="title" th:value="${title}" placeholder="Type title to search...">
+        <select th:name="range" th:id="range">
+            <option th:each="option : ${eventSearchOptions}"
+                    th:value="${option.getValue()}"
+                    th:selected="${option.getValue() == range ? true : false}"
+                    th:text="${option.getDisplayText()}">Options</option>
+        </select>
+        <input type="submit" value="Search">
+    </form>
+    <br><br>
+    <table border="1">
+        <thead>
+            <tr style="text-align: center; vertical-align: middle; font-weight: bold">
+                <td>Title</td>
+                <td>Starting Date</td>
+                <td>Ending Date</td>
+                <td>Description</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align: center; vertical-align: middle" th:each="event: ${events}">
+                <td><a th:href="@{/events/{eventId}(eventId = ${event.getId()})}" th:text="${event.getTitle()}"></a></td>
+                <td th:text="${event.getStartingDate()}"></td>
+                <td th:text="${event.getEndingDate()}"></td>
+                <td th:text="${event.getDescription()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:if="${events.totalPages > 1}"
+    th:each="pageNumber : ${pageNumbers}" style="display: inline-block;">
+    <a th:href="@{/events(title=${title}, range=${range}, page=${pageNumber}-1)}" th:text="${pageNumber}"></a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Manager App</title>
+</head>
+<body>
+    <div style="color: red" th:if="${param.error}">Invalid login and/or password</div>
+    <div style="display: inline-block;">
+        <p style="display: inline;">Doesn't have account ? </p>
+        <a th:href="@{/register}">Register now</a>
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div>
+            <input type="text" name="username" id="username" autofocus="autofocus" placeholder="Login (email)">
+        </div>
+        <div>
+            <input type="password" name="password" id="password" placeholder="Password">
+        </div>
+        <div>
+            <input type="submit" name="login-submit" id="login-submit" value="Log In">
+        </div>
+    </form>
+</body>
+</html>

@@ -1,9 +1,6 @@
 package pl.sda.partyka.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,28 +10,29 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@Builder
+@AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue()
+    private long userId;
 
     private String login;
     private String password;
     private String displayName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "roleId")})
     private List<Role> roles;
 
     @OneToMany(mappedBy = "eventAuthor")
     private List<Event> createdEvents;
-
     @ManyToMany
     @JoinTable(name = "users_events",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "eventId")})
     private List<Event> eventsSignedTo;
 
     @OneToMany(mappedBy = "commentAuthor")

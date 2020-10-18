@@ -28,3 +28,6 @@ hs_err_pid*
 *.iws
 *.iml
 *.ipr
+
+#Ignoring properties with DB config
+/src/main/resources/application-prod.properties

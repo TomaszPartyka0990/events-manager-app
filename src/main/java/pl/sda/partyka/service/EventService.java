@@ -12,8 +12,10 @@ import pl.sda.partyka.dto.EventTableView;
 import pl.sda.partyka.error.EventCreationDateException;
 import pl.sda.partyka.error.EventNotFoundException;
 import pl.sda.partyka.repository.EventRepository;
+import pl.sda.partyka.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static pl.sda.partyka.utils.Utils.EVENT_START_DATE_FIELD_NAME;
@@ -23,6 +25,7 @@ import static pl.sda.partyka.utils.Utils.EVENT_START_DATE_FIELD_NAME;
 public class EventService {
 
     private final EventRepository eventRepo;
+    private final UserRepository userRepository;
 
     public Event addEvent(EventCreateRequest eventToAdd, User author) throws EventCreationDateException {
         LocalDate eventStartingDate = LocalDate.parse(eventToAdd.getStartingDate());
@@ -83,6 +86,34 @@ public class EventService {
         } else {
             throw new EventNotFoundException("Event not found");
         }
+    }
+
+    public void signToEvent(Event event, User user){
+        List<User> signedUsers = event.getSignedUsers();
+        List<Event> eventsSignedTo = user.getEventsSignedTo();
+        if (!signedUsers.contains(user) && !eventsSignedTo.contains(event)) {
+            signedUsers.add(user);
+            eventRepo.save(event);
+            eventsSignedTo.add(event);
+            userRepository.save(user);
+        }
+    }
+
+    public void unsignFromEvent(Event event, User user){
+        List<User> signedUsers = event.getSignedUsers();
+        List<Event> eventsSignedTo = user.getEventsSignedTo();
+        signedUsers.remove(user);
+        eventsSignedTo.remove(event);
+        eventRepo.save(event);
+        userRepository.save(user);
+    }
+
+    public boolean isUserAlreadySigned(Event event, User user){
+        if (event == null || user == null){
+            return false;
+        }
+        List<User> signedUsers = event.getSignedUsers();
+        return signedUsers.contains(user);
     }
 
     private EventTableView mapEventToEventTableView(Event event){

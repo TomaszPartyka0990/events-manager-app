@@ -14,6 +14,7 @@ import pl.sda.partyka.domain.User;
 import pl.sda.partyka.dto.CommentCreateRequest;
 import pl.sda.partyka.dto.EventCreateRequest;
 import pl.sda.partyka.dto.EventTableView;
+import pl.sda.partyka.dto.SignOrUnsignFromEventRequest;
 import pl.sda.partyka.error.ErrorInfo;
 import pl.sda.partyka.service.CommentService;
 import pl.sda.partyka.service.EventService;
@@ -28,7 +29,7 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
-public class EventContoller {
+public class EventController {
 
     private final EventService eventService;
     private final UserService userService;
@@ -36,8 +37,8 @@ public class EventContoller {
 
     @Secured("ROLE_ORGANIZER")
     @GetMapping("/addEvent")
-    public String showAddingEventForm(Model model, @ModelAttribute(value = "errors") ArrayList<ErrorInfo> errorsCaught){
-        ArrayList<ErrorInfo> errors = new ArrayList<>(errorsCaught);
+    public String showAddingEventForm(Model model, @ModelAttribute(value = "errors") List<ErrorInfo> errorsCaught){
+        List<ErrorInfo> errors = new ArrayList<>(errorsCaught);
         model.addAttribute("errors", errors);
         EventCreateRequest eventCreateRequest = new EventCreateRequest();
         model.addAttribute("eventCreateRequest", eventCreateRequest);
@@ -70,10 +71,20 @@ public class EventContoller {
     }
 
     @GetMapping("/events/{eventId}")
-    public String showEventById(Model model, @PathVariable(name = "eventId") Long eventId, @RequestParam (name = "page", defaultValue = "0") Integer page){
+    public String showEventById(Model model, @PathVariable(name = "eventId") Long eventId, @RequestParam (name = "page", defaultValue = "0") Integer page, Principal principal){
         EventTableView event = eventService.getEventViewById(eventId);
-        Event eventById = eventService.getEventById(eventId);
         model.addAttribute("eventDetails", event);
+        Event eventById = eventService.getEventById(eventId);
+        model.addAttribute("signedUsers", eventById.getSignedUsers());
+        if (principal == null){
+            model.addAttribute("isUserAlreadySigned", false);
+        } else {
+            User user = userService.getUserByLogin(principal.getName());
+            model.addAttribute("isUserAlreadySigned", eventService.isUserAlreadySigned(eventById, user));
+        }
+        SignOrUnsignFromEventRequest signOrUnsignFromEventRequest = new SignOrUnsignFromEventRequest();
+        signOrUnsignFromEventRequest.setEventId(eventId);
+        model.addAttribute("signOrUnsignFromEventRequest", signOrUnsignFromEventRequest);
         CommentCreateRequest commentCreateRequest = new CommentCreateRequest();
         commentCreateRequest.setEventId(eventId);
         model.addAttribute("commentCreateRequest", commentCreateRequest);
@@ -85,5 +96,21 @@ public class EventContoller {
             model.addAttribute("pageNumbers", pageNumbers);
         }
         return "single_event";
+    }
+
+    @PostMapping("/signToEvent")
+    public String signToEvent(@ModelAttribute (value = "signOrUnsignFromEventRequest") SignOrUnsignFromEventRequest request, Principal principal){
+        Event event = eventService.getEventById(request.getEventId());
+        User user = userService.getUserByLogin(principal.getName());
+        eventService.signToEvent(event, user);
+        return "redirect:/events/" +  request.getEventId();
+    }
+
+    @PostMapping("/unsignFromEvent")
+    public String unsignFromEvent(@ModelAttribute (value = "signOrUnsignFromEventRequest") SignOrUnsignFromEventRequest request, Principal principal){
+        Event event = eventService.getEventById(request.getEventId());
+        User user = userService.getUserByLogin(principal.getName());
+        eventService.unsignFromEvent(event, user);
+        return "redirect:/events/" + request.getEventId();
     }
 }

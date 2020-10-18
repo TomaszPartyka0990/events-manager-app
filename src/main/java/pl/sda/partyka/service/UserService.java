@@ -37,7 +37,7 @@ public class UserService {
         User user = User.builder()
                 .login(userToAdd.getLogin())
                 .password(passwordEncoder.encode(userToAdd.getPassword()))
-                .displayName(userToAdd.getDisplauName())
+                .displayName(userToAdd.getDisplayName())
                 .roles(roles)
                 .createdEvents(new ArrayList<>())
                 .eventsSignedTo(new ArrayList<>())

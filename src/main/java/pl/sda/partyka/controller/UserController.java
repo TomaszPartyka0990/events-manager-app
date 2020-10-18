@@ -44,6 +44,6 @@ public class UserController {
             return "redirect:/register";
         }
         userService.addUser(userToCreate);
-        return "main";
+        return "redirect:/main";
     }
 }

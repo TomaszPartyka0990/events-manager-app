@@ -11,7 +11,7 @@ import pl.sda.partyka.service.EventService;
 
 @Controller
 @RequiredArgsConstructor
-public class MainContoller {
+public class MainController {
 
     private final EventService eventService;
 

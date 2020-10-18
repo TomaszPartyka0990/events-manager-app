@@ -25,6 +25,6 @@ public class UserCreateRequest {
     @NotNull
     @NotBlank
     @Length(max = 50)
-    private String displauName;
+    private String displayName;
     private List<Role> roles = new ArrayList<>();
 }

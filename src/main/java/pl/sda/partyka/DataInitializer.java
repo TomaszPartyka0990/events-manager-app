@@ -39,7 +39,7 @@ public class DataInitializer implements ApplicationRunner {
             userCreateRequest.setLogin("asd@asd.pl");
             userCreateRequest.setPassword("12345678");
             userCreateRequest.setRepeatedPassword("12345678");
-            userCreateRequest.setDisplauName("ASD");
+            userCreateRequest.setDisplayName("ASD");
             List<Role> roles = new ArrayList<>();
             roles.add(organizer);
             userCreateRequest.setRoles(roles);

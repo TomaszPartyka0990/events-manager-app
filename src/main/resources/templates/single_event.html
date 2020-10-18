@@ -34,7 +34,35 @@
     <div>
         <textarea th:text="${eventDetails.getDescription()}" rows="10" cols="30" disabled></textarea>
     </div>
-    <br><br>
+    <div th:text="${'Users signed to this event: ' + signedUsers.size()}"></div>
+    <div th:each="user : ${signedUsers}" style="display: inline-block;">
+        <p th:text="${user.getDisplayName()}"></p>
+    </div>
+    <br>
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="!${isUserAlreadySigned}">
+            <form th:id="signToEventForm" th:action="@{/signToEvent}" th:object="${signOrUnsignFromEventRequest}" method="POST">
+                <div>
+                    <input type="number"  th:field="*{eventId}" th:value="*{getEventId()}" hidden>
+                </div>
+                <div>
+                    <input type="submit" value="Sign In">
+                </div>
+            </form>
+        </div>
+        <div th:if="${isUserAlreadySigned}">
+            <div>You are signed to this event</div>
+            <form th:id="unsignFromEventForm" th:action="@{/unsignFromEvent}" th:object="${signOrUnsignFromEventRequest}" method="POST">
+                <div>
+                    <input type="number"  th:field="*{eventId}" th:value="*{getEventId()}" hidden>
+                </div>
+                <div>
+                    <input type="submit" value="Unsign">
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
     <div style="color: red" th:each="error : ${errors}" th:text="${error.getMsg()}">Error Msg</div>
     <div sec:authorize="isAuthenticated()">
         <form th:id="commentCreateForm" th:action="@{/addComment}" th:object="${commentCreateRequest}" method="POST">
